@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecomm-pricing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecomm-pricing
+  template:
+    metadata:
+      labels:
+        app: ecomm-pricing
+    spec:
+      containers:
+        - name: ecomm-pricing
+          image: __ECR_URL__/ecomm-pricing:latest
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: ecomm-ecr-key
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecomm-pricing
+spec:
+  selector:
+    app: ecomm-pricing
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
